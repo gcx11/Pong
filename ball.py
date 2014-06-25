@@ -195,7 +195,7 @@ class Ball():
 
         if cd_x <= brick.width/2:
             return True
-        if cd_x <= brick.height/2:
+        if cd_y <= brick.height/2:
             return True
 
         cd_sq = ((cd_x - brick.width/2)*(cd_x - brick.width/2) -
