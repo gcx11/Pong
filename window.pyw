@@ -24,6 +24,7 @@ pygame.init()
 class NewGameException(Exception): pass
 class MultiPlayerException(Exception): pass
 class TutorialException(Exception): pass
+class EndTutorialException(Exception): pass
 class JumpException(Exception): pass
 
 
@@ -44,7 +45,7 @@ class Window:
                         level()
                     except NextLevelException:
                         self.next_loop()
-                    except EndGameException:
+                    except EndSingleException:
                         break
             elif self._temp == "multi":
                 score.score = 0
@@ -52,13 +53,13 @@ class Window:
                 while True:
                     try:
                         multiplayer()
-                    except EndGameException:
+                    except EndMultiException:
                         break
             elif self._temp == "tutorial":
                 while True:
                     try:
                         self.tutorial_loop()
-                    except EndGameException:
+                    except EndTutorialException:
                         break
             else:
                 pass

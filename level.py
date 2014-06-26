@@ -21,7 +21,7 @@ from color import *
 pygame.init()
 
 class NextLevelException(Exception): pass
-class EndGameException(Exception): pass
+class EndSingleException(Exception): pass
 
 class Level:
     
@@ -113,18 +113,18 @@ class Level:
                     storage.add_brick(Brick(650 - i*100, 50*(j + 1),
                                             50, 50, 1))
         elif game.level == 8: # nothing
+            self.paddle_1 = Paddle(0, 225, 20, 120, 5)
+            self.paddle_2 = Paddle(780, 225, 20, 120, 5)
             self.paddle_1.set_speed(5)
             self.paddle_2.set_speed(2)
             for ball_obj in storage.balls:
                 ball_obj.acc = 3 * 60 / (game.fps * 1000)
             storage.add_brick(Brick(50, 50, 100, 100, 4))
         else: #stuff
+            self.paddle_1 = Paddle(0, 225, 20, 120, 5)
+            self.paddle_2 = Paddle(780, 225, 20, 120, 5)
             self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(20)
-            storage.add_brick(Brick(200, 150, 100, 100, 0))
-            storage.add_brick(Brick(600, 150, 100, 100, 0))
-            storage.add_brick(Brick(600, 450, 100, 100, 0))
-            storage.add_brick(Brick(200, 450, 100, 100, 0))
+            self.paddle_2.set_speed(5)
             for ball_obj in storage.balls:
                 ball_obj.acc = 0.005
         # levels end
@@ -223,7 +223,7 @@ class Level:
                     self.paddle_2.reset()
                     storage.reset_bricks()
                     storage.reset_balls()
-                    raise EndGameException
+                    raise EndSingleException
                 for ball_obj in storage.balls:
                     ball_obj.reset()
                 self.paddle_1.reset()

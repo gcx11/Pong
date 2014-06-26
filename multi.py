@@ -20,7 +20,7 @@ from color import *
 
 pygame.init()
 
-class EndGameException(Exception): pass
+class EndMultiException(Exception): pass
 
 class MultiPlayer: 
 
@@ -154,7 +154,7 @@ class MultiPlayer:
                     self.paddle_2.reset()
                     storage.reset_bricks()
                     storage.reset_balls()
-                    raise EndGameException
+                    raise EndMultiException
                 for ball_obj in storage.balls:
                     ball_obj.reset()
                 self.paddle_1.reset()
@@ -172,4 +172,4 @@ class MultiPlayer:
                 score.reset()
                 self.paddle_1.reset()
                 self.paddle_2.reset()
-                raise EndGameException
+                raise EndMultiException
