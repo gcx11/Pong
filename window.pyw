@@ -21,6 +21,8 @@ from multi import *
 
 pygame.init()
 
+
+#exceptions
 class NewGameException(Exception): pass
 class MultiPlayerException(Exception): pass
 class TutorialException(Exception): pass
@@ -29,12 +31,18 @@ class JumpException(Exception): pass
 
 
 class Window:
+    """
+    Main game class.
+    """
 
     def __init__(self):
         self._temp = ""
         self._running = True
 
     def mainloop(self):
+        """
+        Game mainloop.
+        """
         while True:
             self.menu_loop()
             if self._temp == "single":
@@ -65,6 +73,9 @@ class Window:
                 pass
 
     def menu_loop(self):
+        """
+        Calls menu loop.
+        """
         self.label_game_name = Label(50, 50, 700, 75, "THE PONG GAME",
                                      color.black, color.white, "courier", 75)
         self.label_game_singleplayer = Label(50, 150, 700, 90, "Player vs AI",
@@ -107,6 +118,9 @@ class Window:
             self._temp = "tutorial"
 
     def menu_draw(self):
+        """
+        Draws menu labels.
+        """
         self.label_game_name.draw()
         self.label_game_singleplayer.draw()
         self.label_game_multiplayer.draw()
@@ -114,6 +128,9 @@ class Window:
         self.label_game_exit.draw()
 
     def next_loop(self):
+        """
+        Draws score after turn.
+        """
         self.label_next = Label(50, 150, 700, 75, "LEVEL {0} - SCORE {1}".format(game.level, score.score),
                                      color.black, color.white, "courier", 75)
         self.label_click = Label(50, 300, 700, 75, "NEXT",
@@ -138,6 +155,9 @@ class Window:
             pass
 
     def tutorial_loop(self):
+        """
+        Tutorial loop.
+        """
         self.label_text_1 = Label(0, 0, 800, 100,
                                 "How To Play",
                                 color.black, color.white, "courier", 100)
@@ -184,6 +204,9 @@ class Window:
             game.fps_clock.tick(game.fps)
 
     def tutorial_draw(self):
+        """
+        Draws tutorial labels.
+        """
         self.label_text_1.draw()
         self.label_text_2.draw()
         self.label_text_3.draw()
@@ -194,7 +217,8 @@ class Window:
         self.label_text_8.draw()
         self.label_text_9.draw()
         self.label_text_10.draw()
-                            
-        
+
+
+#creating window
 window = Window()
 window.mainloop()

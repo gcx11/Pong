@@ -20,6 +20,7 @@ from color import *
 
 pygame.init()
 
+#exceptions
 class NextLevelException(Exception): pass
 class EndSingleException(Exception): pass
 
@@ -36,12 +37,10 @@ class Level:
                                       color.gray, color.black, "arial", 50)
         storage.reset_bricks()
         storage.reset_balls()
-        self.ball_1 = Ball(400, 300, 20, 5, 5, 1, 0.005, color.white)
-        #self.ball_2 = Ball(400, 300, 20, 5, 5, 1, 0.005, color.white)
-        storage.add_ball(self.ball_1)
-        #storage.add_ball(self.ball_2)
-        self.paddle_1 = Paddle(0, 225, 20, 120, 5)
-        self.paddle_2 = Paddle(780, 225, 20, 120, 5)
+        storage.reset_paddles()
+        storage.add_ball(Ball(400, 300, 20, 5, 5, 1, 0.005, color.white))
+        storage.add_paddle(Paddle(0, 225, 20, 120, 5))
+        storage.add_paddle(Paddle(780, 225, 20, 120, 5))
         self.pause = False
         self._running = True
 
@@ -50,24 +49,24 @@ class Level:
         for ball_obj in storage.balls:
             ball_obj.reset()
         storage.reset_bricks()
-        self.paddle_1.reset()
-        self.paddle_2.reset()
+        for paddle_obj in storage.paddles:
+            paddle_obj.reset()
         #levels
         if game.level == 1: # basic
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(1)
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(1)
             for ball_obj in storage.balls:
                 ball_obj.acc = 1 * 60 / (game.fps * 1000)
         elif game.level == 2: # judge
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(2)
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(2)
             for ball_obj in storage.balls:
                 ball_obj.acc = 3 * 60 / (game.fps * 1000)
             storage.add_brick(Brick(250, 250, 100, 100, 0))
             storage.add_brick(Brick(450, 250, 100, 100, 0))
         elif game.level == 3: # half
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(2)
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(2)
             for ball_obj in storage.balls:
                 ball_obj.acc = 3 * 60 / (game.fps * 1000)
             storage.add_brick(Brick(200, 150, 100, 100, 0))
@@ -75,8 +74,8 @@ class Level:
             storage.add_brick(Brick(500, 350, 100, 100, 0))
             storage.add_brick(Brick(200, 350, 100, 100, 1))
         elif game.level == 4: # demolition
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(2)
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(2)
             for ball_obj in storage.balls:
                 ball_obj.acc = 3 * 60 / (game.fps * 1000)
             for i in range(14):
@@ -84,15 +83,15 @@ class Level:
                     storage.add_brick(Brick(50*(i + 1), 50*(j + 1),
                                             50, 50, 1))
         elif game.level == 5: # hot and cold
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(2)
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(2)
             for ball_obj in storage.balls:
                 ball_obj.acc = 3 * 60 / (game.fps * 1000)
             storage.add_brick(Brick(350, 150, 100, 100, 2))
             storage.add_brick(Brick(350, 350, 100, 100, 3))
         elif game.level == 6: # defence
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(5)
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(2)
             for ball_obj in storage.balls:
                 ball_obj.acc = 6 * 60 / (game.fps * 1000)
             storage.add_brick(Brick(50, 50, 100, 100, 0))
@@ -100,10 +99,11 @@ class Level:
             storage.add_brick(Brick(50, 450, 100, 100, 0))
             storage.add_brick(Brick(50, 650, 100, 100, 0))
         elif game.level == 7: # small
-            self.paddle_1 = Paddle(0, 225, 20, 60, 5)
-            self.paddle_2 = Paddle(780, 225, 20, 60, 5)
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(2)
+            storage.reset_paddles()
+            storage.add_paddle(Paddle(0, 225, 20, 60, 5))
+            storage.add_paddle(Paddle(780, 225, 20, 60, 5))
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(2)
             for ball_obj in storage.balls:
                 ball_obj.acc = 3 * 60 / (game.fps * 1000)
             for i in range(3):
@@ -113,18 +113,18 @@ class Level:
                     storage.add_brick(Brick(650 - i*100, 50*(j + 1),
                                             50, 50, 1))
         elif game.level == 8: # nothing
-            self.paddle_1 = Paddle(0, 225, 20, 120, 5)
-            self.paddle_2 = Paddle(780, 225, 20, 120, 5)
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(2)
+            storage.reset_paddles()
+            storage.add_paddle(Paddle(0, 225, 20, 120, 5))
+            storage.add_paddle(Paddle(780, 225, 20, 120, 5))
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(2)
             for ball_obj in storage.balls:
                 ball_obj.acc = 3 * 60 / (game.fps * 1000)
-            storage.add_brick(Brick(50, 50, 100, 100, 4))
+            storage.add_brick(Brick(350, 150, 100, 100, 4))
+            storage.add_brick(Brick(350, 350, 100, 100, 5))
         else: #stuff
-            self.paddle_1 = Paddle(0, 225, 20, 120, 5)
-            self.paddle_2 = Paddle(780, 225, 20, 120, 5)
-            self.paddle_1.set_speed(5)
-            self.paddle_2.set_speed(5)
+            storage.paddles[0].set_speed(5)
+            storage.paddles[1].set_speed(5)
             for ball_obj in storage.balls:
                 ball_obj.acc = 0.005
         # levels end
@@ -137,18 +137,32 @@ class Level:
                     if event.key == ord("p"):
                         self.pause = not self.pause
                     if event.key == ord("w") and not self.pause:
-                        self.paddle_1.set(-1)
+                        if storage.paddles[0].confused:
+                            storage.paddles[0].set(1)
+                        else:
+                            storage.paddles[0].set(-1)
                     if event.key == ord("s") and not self.pause:
-                        self.paddle_1.set(1)
+                        if storage.paddles[0].confused:
+                            storage.paddles[0].set(-1)
+                        else:
+                            storage.paddles[0].set(1)
                     if event.key == ord("h") and not self.pause:
                         score.add_p1()
                 if event.type == KEYUP:
-                    if (event.key == ord("w") and self.paddle_1.get() == -1
-                        and not self.pause):
-                        self.paddle_1.set(0)
-                    if (event.key == ord("s") and self.paddle_1.get() == 1
-                        and not self.pause):
-                        self.paddle_1.set(0)
+                    if (event.key == ord("w") and not self.pause):
+                        if (storage.paddles[0].get() == -1 and
+                            not storage.paddles[0].confused):
+                            storage.paddles[0].set(0)
+                        elif (storage.paddles[0].get() == 1 and
+                              storage.paddles[0].confused):
+                            storage.paddles[0].set(0)
+                    if (event.key == ord("s") and not self.pause):
+                        if (storage.paddles[0].get() == 1 and
+                            not storage.paddles[0].confused):
+                            storage.paddles[0].set(0)
+                        elif (storage.paddles[0].get() == -1 and
+                              storage.paddles[0].confused):
+                            storage.paddles[0].set(0)
             if not self.pause:
                 self.raise_events()
                 self.enemy_play()
@@ -166,7 +180,7 @@ class Level:
 
     def raise_events(self):
         for ball_obj in storage.balls:
-            event.event_paddle(ball_obj, self.paddle_1, self.paddle_2)
+            event.event_paddle(ball_obj, storage.paddles[0], storage.paddles[1])
 
 
     def enemy_play(self):
@@ -174,30 +188,35 @@ class Level:
         for ball_obj in storage.balls:
             if ball_obj.x >= max_x:
                 max_x = ball_obj.x
-                self.paddle_2.set(ai.play(ball_obj, self.paddle_2))
-
+                if storage.paddles[1].confused:
+                    storage.paddles[1].set(-ai.play(ball_obj, storage.paddles[1]))
+                else:
+                    storage.paddles[1].set(ai.play(ball_obj, storage.paddles[1]))
     def me_play(self):
         min_x = game.windowwidth
         for ball_obj in storage.balls:
             if ball_obj.x <= min_x:
                 min_x = ball_obj.x
-                self.paddle_1.set(ai.play(ball_obj, self.paddle_1))
+                if storage.paddles[0].confused:
+                    storage.paddles[0].set(-ai.play(ball_obj, storage.paddles[0]))
+                else:
+                    storage.paddles[0].set(ai.play(ball_obj, storage.paddles[0]))
 
     def game_collide(self):
-        self.paddle_1.collide(self.label_game_name.height,
+        storage.paddles[0].collide(self.label_game_name.height,
                               self.label_game_score.height)
-        self.paddle_2.collide(self.label_game_name.height,
+        storage.paddles[1].collide(self.label_game_name.height,
                               self.label_game_score.height)
         for ball_obj in storage.balls:
             ball_obj.collide(self.label_game_name.height,
                              self.label_game_score.height)
-            ball_obj.paddles(self.paddle_1, self.paddle_2)
+            ball_obj.paddles(storage.paddles[0], storage.paddles[1])
             for brick_obj in storage.bricks:
                 ball_obj.collide_brick(brick_obj)
 
     def game_move(self):
-        self.paddle_1.move()
-        self.paddle_2.move()
+        storage.paddles[0].move()
+        storage.paddles[1].move()
         for ball_obj in storage.balls:
             ball_obj.move()
 
@@ -210,8 +229,8 @@ class Level:
             ball_obj.draw()
         for brick_obj in storage.bricks:
             brick_obj.draw()
-        self.paddle_1.draw()
-        self.paddle_2.draw()
+        storage.paddles[0].draw()
+        storage.paddles[1].draw()
 
     def game_out(self):
         for ball_obj in storage.balls:
@@ -219,26 +238,26 @@ class Level:
                 score.add_p2()
                 if score.p2 >= game.max_count:
                     score.reset()
-                    self.paddle_1.reset()
-                    self.paddle_2.reset()
+                    storage.paddles[0].reset()
+                    storage.paddles[1].reset()
                     storage.reset_bricks()
                     storage.reset_balls()
                     raise EndSingleException
                 for ball_obj in storage.balls:
                     ball_obj.reset()
-                self.paddle_1.reset()
-                self.paddle_2.reset()
+                storage.paddles[0].reset()
+                storage.paddles[1].reset()
             elif ball_obj.x > game.windowwidth:
                 score.add_p1()
                 for ball_obj in storage.balls:
                     ball_obj.reset()
-                self.paddle_1.reset()
-                self.paddle_2.reset()
+                storage.paddles[0].reset()
+                storage.paddles[1].reset()
             else:
                 pass
             if score.p1 >= game.max_count:
                 score.add_score()
                 score.reset()
-                self.paddle_1.reset()
-                self.paddle_2.reset()
+                storage.paddles[0].reset()
+                storage.paddles[1].reset()
                 raise NextLevelException

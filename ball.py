@@ -238,10 +238,9 @@ class Ball():
         """
         It draws ball.
         """
-        # delete
-        if self.owner == 0:
-            self.color = color.yellow
-        else:
+        if self.owner:
             self.color = color.green
+        else:
+            self.color = color.yellow
         pygame.draw.ellipse(game.screen, self.color,
                             (self.x, self.y, self.r, self.r))

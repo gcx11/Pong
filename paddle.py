@@ -19,7 +19,7 @@ class Paddle():
     """
 
     def __init__(self, posx, posy, width, height, speed, freezed = False,
-                 bursted = False):
+                 bursted = False, confused = False):
         """
         Parameters:
         posx - position on x axis
@@ -38,6 +38,7 @@ class Paddle():
         self.direction = 0
         self.freezed = freezed
         self.bursted = bursted
+        self.confused = confused
 
     def set(self, value):
         """
@@ -72,6 +73,7 @@ class Paddle():
         self.speed = self.def_speed
         self.freezed = False
         self.bursted = False
+        self.confused = False
         self.direction = 0
 
     def collide(self, up, down):
@@ -113,6 +115,18 @@ class Paddle():
             else:
                 self.speed = self.speed * 2
                 self.bursted = True
+
+    def confuse(self):
+        if self.confused:
+            pass
+        else:
+            self.confused = True
+
+    def heal(self):
+        if self.confused:
+            self.confused = False
+        else:
+            pass
 
     def draw(self):
         """

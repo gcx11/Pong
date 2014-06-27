@@ -36,6 +36,8 @@ class Brick:
             self.bcolor = color.orangered
         elif event_type == 4:
             self.bcolor = color.green
+        elif event_type == 5:
+            self.bcolor = color.yellow
         self.event_type = event_type
 
     def draw(self):

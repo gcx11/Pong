@@ -52,6 +52,12 @@ class Storage:
         """
         self.balls = []
 
+    def reset_paddles(self):
+        """
+        Delete all paddles from list.
+        """
+        self.paddles = []
+
     def remove_brick(self, brick):
         """
         Delete brick from list.
@@ -63,5 +69,6 @@ class Storage:
         Delete ball from list.
         """
         self.balls.remove(ball)
+
 
 storage = Storage()

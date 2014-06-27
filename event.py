@@ -17,19 +17,27 @@ class Event:
 
     def event_paddle(self, ball, paddle_1, paddle_2):
         if ball.event_type == 2:
-            if ball.owner == 0:
-                paddle_2.freeze()
-            else:
+            if ball.owner:
                 paddle_1.freeze()
+            else:
+                paddle_2.freeze()
             ball.event_type = 0
         elif ball.event_type == 3:
-            if ball.owner == 0:
-                paddle_1.burst()
-            else:
+            if ball.owner:
                 paddle_2.burst()
+            else:
+                paddle_1.burst()
             ball.event_type = 0
         elif ball.event_type == 4:
-            pass
+            if ball.owner: 
+                paddle_1.confuse()
+            else:
+                paddle_2.confuse()
+        elif ball.event_type == 5:
+            if ball.owner: 
+                paddle_2.heal()
+            else:
+                paddle_1.heal()
 
     def event_brick(self, brick, ball):
         if brick.event_type == 1:
