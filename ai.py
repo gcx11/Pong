@@ -14,12 +14,6 @@ class AI():
     Simple AI for paddle.
     It can be used for both paddles.
     """
-    
-    def __init__(self):
-        """
-        Do nothing. Can be removed.
-        """
-        pass
 
     def play(self, ball, paddle):
         """

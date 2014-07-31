@@ -3,6 +3,7 @@
 import copy
 import math
 import pygame
+import pygame.gfxdraw
 import random
 import sys
 from pygame.locals import *
@@ -17,14 +18,15 @@ class Ball():
     Class for creating ball.
     """
 
-    __slots__ = ("x", "y", "r", "v", "def_v", "angle", "acc", "color",
+    __slots__ = ("x", "y", "d", "r", "v", "def_v", "angle", "acc", "color",
                  "owner", "event_type")
     
-    def __init__(self, x, y, r, v, def_v, angle, acc, color, event_type = 0):
+    def __init__(self, x, y, d, v, def_v, angle, acc, color, event_type = 0):
         """
         Parameters:
         x - starning position of x axis
         y - starning position of x axis
+        d - diameter
         r - radius
         v - velocity
         def_v - minimal velocity of ball
@@ -34,7 +36,8 @@ class Ball():
         """
         self.x = x
         self.y = y
-        self.r = r
+        self.d = d
+        self.r = self.d / 2
         self.v = v
         self.def_v = def_v
         self.angle = 2* math.pi - angle
@@ -53,15 +56,15 @@ class Ball():
         """
         Move ball on new position.
         """
-        self.x = self.x + (self.v * 60 / game.fps * math.cos(self.angle))
-        self.y = self.y + (self.v * 60 / game.fps * math.sin(self.angle))
+        self.x = self.x + self.v * 60 / game.fps * math.cos(self.angle)
+        self.y = self.y + self.v * 60 / game.fps * math.sin(self.angle)
 
     def reset(self):
         """
         Reset ball stats.
         """
-        self.x = game.windowwidth/2
-        self.y = game.windowheight/2
+        self.x = game.windowwidth / 2
+        self.y = game.windowheight / 2
         self.v = self.def_v
         self.owner = random.randint(0, 1)
         self.event_type = 0
@@ -89,7 +92,7 @@ class Ball():
         _x = self.x + ((_v + self.acc * 60 / game.fps) * 60 / game.fps * math.cos(_angle))
         _y = self.y + ((_v + self.acc * 60 / game.fps) * 60 / game.fps * math.sin(_angle))
         
-        if(_y <= up or _y + self.r >= game.windowheight - down):
+        if(_y <= up or _y + self.d >= game.windowheight - down):
             self.angle = 2 * math.pi - self.angle
             # bit of randomness
             self.angle = (self.angle +
@@ -170,17 +173,17 @@ class Ball():
         """
         """
         for a, b in directions:
-            if ((brick.posx <= _x + a*self.r <= brick.posx + brick.width + a*self.r)
+            if ((brick.posx <= _x + a*self.d <= brick.posx + brick.width + a*self.d)
                 and
-                (brick.posy <= _y + b*self.r <= brick.posy + brick.height + b*self.r)):
+                (brick.posy <= _y + b*self.d <= brick.posy + brick.height + b*self.d)):
                 return True
         else:
             return False
         """
         #http://stackoverflow.com/questions/401847/
         #circle-rectangle-collision-detection-intersection
-        _x = _x + self.r/2
-        _y = _y + self.r/2
+        _x = _x + self.d/2
+        _y = _y + self.d/2
 
         _brick_x = brick.posx + brick.width/2
         _brick_y = brick.posy + brick.height/2
@@ -188,9 +191,9 @@ class Ball():
         cd_x = abs(_x - _brick_x)
         cd_y = abs(_y - _brick_y)
 
-        if cd_x > brick.width/2 + self.r/2:
+        if cd_x > brick.width/2 + self.d/2:
             return False
-        if cd_y > brick.height/2 + self.r/2:
+        if cd_y > brick.height/2 + self.d/2:
             return False
 
         if cd_x <= brick.width/2:
@@ -201,7 +204,7 @@ class Ball():
         cd_sq = ((cd_x - brick.width/2)*(cd_x - brick.width/2) -
                  (cd_y - brick.height/2)*(cd_y - brick.height/2))
 
-        return (cd_sq <= (self.r*self.r/4))
+        return (cd_sq <= (self.d*self.d/4))
         
                     
 
@@ -219,16 +222,16 @@ class Ball():
         _y = self.y + ((_v + self.acc * 60 / game.fps) * 60 / game.fps * math.sin(_angle))
         
         if ((_x <= paddle_1.width) and
-            (paddle_1.posy - self.r <= _y <= paddle_1.posy +
-             paddle_1.height + self.r)):
+            (paddle_1.posy - self.d <= _y <= paddle_1.posy +
+             paddle_1.height + self.d)):
             self.angle = 3 * math.pi - self.angle
             self.angle = (self.angle + math.pi / 1000 *
                           (self.y - paddle_1.posy - paddle_1.height/2))
             self.owner = 0
                     
-        if ((_x + self.r >= game.windowwidth - paddle_2.width) and
-            (paddle_2.posy - self.r <= _y <= paddle_2.posy +
-             paddle_2.height + self.r)):
+        if ((_x + self.d >= game.windowwidth - paddle_2.width) and
+            (paddle_2.posy - self.d <= _y <= paddle_2.posy +
+             paddle_2.height + self.d)):
             self.angle = 3 * math.pi - self.angle
             self.angle = (self.angle + math.pi / 1000 *
                           (self.y - paddle_2.posy - paddle_2.height/2))
@@ -243,4 +246,4 @@ class Ball():
         else:
             self.color = color.yellow
         pygame.draw.ellipse(game.screen, self.color,
-                            (self.x, self.y, self.r, self.r))
+                            (self.x, self.y, self.d, self.d))

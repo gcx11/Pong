@@ -15,12 +15,15 @@ from mouse import *
 from label import *
 from brick import *
 from storage import *
+from timer import *
 from color import *
 from level import *
 from multi import *
 
+
 pygame.init()
 
+banner = pygame.image.load(r"images/geekwork_splash.png")
 
 #exceptions
 class NewGameException(Exception): pass
@@ -44,6 +47,7 @@ class Window:
         Game mainloop.
         """
         while True:
+            self.banner_loop()
             self.menu_loop()
             if self._temp == "single":
                 score.score = 0
@@ -71,6 +75,19 @@ class Window:
                         break
             else:
                 pass
+
+    def banner_loop(self):
+        my_timer.start(7)
+        while True:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+            if my_timer.check():
+                break
+            game.screen.blit(banner, (0, 0))
+            pygame.display.update()
+            game.fps_clock.tick(game.fps)
 
     def menu_loop(self):
         """
@@ -197,7 +214,7 @@ class Window:
                     mouse.x , mouse.y = event.dict["pos"]
                     if event.dict["button"] == 1:
                         if (self.label_text_10.clicked):
-                            raise EndGameException
+                            raise EndTutorialException
             game.screen.fill(color.black)
             self.tutorial_draw()
             pygame.display.update()
