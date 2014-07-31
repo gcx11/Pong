@@ -15,6 +15,7 @@ from mouse import *
 from label import *
 from brick import *
 from storage import *
+from event import *
 from timer import *
 from color import *
 from level import *
@@ -46,8 +47,8 @@ class Window:
         """
         Game mainloop.
         """
+        self.banner_loop()
         while True:
-            self.banner_loop()
             self.menu_loop()
             if self._temp == "single":
                 score.score = 0
@@ -94,15 +95,15 @@ class Window:
         Calls menu loop.
         """
         self.label_game_name = Label(50, 50, 700, 75, "THE PONG GAME",
-                                     color.black, color.white, "courier", 75)
+                                     color.black, color.white, "arial", 75)
         self.label_game_singleplayer = Label(50, 150, 700, 90, "Player vs AI",
-                                      color.white, color.black, "courier", 50)
+                                      color.white, color.black, "arial", 50)
         self.label_game_multiplayer = Label(50, 260, 700, 90, "Player vs Player"
-                                     , color.white, color.black, "courier", 50)
+                                     , color.white, color.black, "arial", 50)
         self.label_game_tutorial = Label(50, 370, 700, 90, "How to Play",
-                                     color.white, color.black, "courier", 50)
+                                     color.white, color.black, "arial", 50)
         self.label_game_exit = Label(50, 480, 700, 90, "Exit Game",
-                                     color.white, color.black, "courier", 50)
+                                     color.white, color.black, "arial", 50)
         try:
             while self._running:
                 game.screen.fill(color.black)
@@ -149,9 +150,9 @@ class Window:
         Draws score after turn.
         """
         self.label_next = Label(50, 150, 700, 75, "LEVEL {0} - SCORE {1}".format(game.level, score.score),
-                                     color.black, color.white, "courier", 75)
+                                     color.black, color.white, "arial", 75)
         self.label_click = Label(50, 300, 700, 75, "NEXT",
-                                     color.black, color.white, "courier", 75)
+                                     color.black, color.white, "arial", 75)
         try:
             while True:
                 game.screen.fill(color.black)
@@ -177,34 +178,34 @@ class Window:
         """
         self.label_text_1 = Label(0, 0, 800, 100,
                                 "How To Play",
-                                color.black, color.white, "courier", 100)
+                                color.black, color.white, "arial", 100)
         self.label_text_2 = Label(0, 100, 800, 75,
                                 "Keyboard (move):",
-                                color.black, color.white, "courier", 50)
+                                color.black, color.white, "arial", 50)
         self.label_text_3 = Label(0, 175, 400, 50,
                                 "Player 1 -",
-                                color.black, color.white, "courier", 50)
+                                color.black, color.white, "arial", 50)
         self.label_text_4 = Label(400, 175, 400, 50,
                                 "Player 2 -",
-                                color.black, color.white, "courier", 50)
+                                color.black, color.white, "arial", 50)
         self.label_text_5 = Label(0, 250, 400, 50,
                                 "W - up",
-                                color.black, color.white, "courier", 50)
+                                color.black, color.white, "arial", 50)
         self.label_text_6 = Label(400, 250, 400, 50,
                                 "UP - up",
-                                color.black, color.white, "courier", 50)
+                                color.black, color.white, "arial", 50)
         self.label_text_7 = Label(0, 325, 400, 50,
                                 "S - down",
-                                color.black, color.white, "courier", 50)
+                                color.black, color.white, "arial", 50)
         self.label_text_8 = Label(400, 325, 400, 50,
                                 "DOWN - down",
-                                color.black, color.white, "courier", 50)
+                                color.black, color.white, "arial", 50)
         self.label_text_9 = Label(0, 400, 800, 50,
                                 "P - pause",
-                                color.black, color.white, "courier", 50)
+                                color.black, color.white, "arial", 50)
         self.label_text_10 = Label(200, 475, 400, 50,
                                 "OK",
-                                color.white, color.black, "courier", 50)
+                                color.white, color.black, "arial", 50)
         while True:
             for event in pygame.event.get():
                 if event.type == QUIT:

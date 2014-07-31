@@ -11,7 +11,7 @@ from color import *
 
 pygame.init()
 
-class Paddle():
+class Paddle:
 
     """
     __slots__ = ("old_posx", "old_posy", "posx", "posy", "width", "height",

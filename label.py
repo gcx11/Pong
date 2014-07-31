@@ -47,7 +47,7 @@ class Label:
         if self.font_name in pygame.font.get_fonts():
             self.font = pygame.font.SysFont(self.font_name, self.font_size)
         else:
-            self.font = pygame.font.SysFont("None", self.font_size)
+            self.font = pygame.font.SysFont("arial", self.font_size)
 
     def draw(self):
         """

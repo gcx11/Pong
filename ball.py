@@ -13,7 +13,7 @@ from color import *
 
 pygame.init()
 
-class Ball():
+class Ball:
     """
     Class for creating ball.
     """
