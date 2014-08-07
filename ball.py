@@ -19,7 +19,7 @@ class Ball:
     """
 
     __slots__ = ("x", "y", "d", "r", "v", "def_v", "angle", "acc", "color",
-                 "owner", "event_type")
+                 "owner", "event_type", "_last_pos")
     
     def __init__(self, x, y, d, v, def_v, angle, acc, color, event_type = 0):
         """
@@ -45,6 +45,7 @@ class Ball:
         self.color = color
         self.owner = random.randint(0, 1)
         self.event_type = event_type
+        self._last_pos = (game.windowwidth / 2, game.windowheight / 2)
         
     def accelerate(self):
         """
@@ -56,6 +57,7 @@ class Ball:
         """
         Move ball on new position.
         """
+        self._last_pos = (self.x, self.y)
         self.x = self.x + self.v * 60 / game.fps * math.cos(self.angle)
         self.y = self.y + self.v * 60 / game.fps * math.sin(self.angle)
 
@@ -67,6 +69,10 @@ class Ball:
         self.y = game.windowheight / 2
         self.v = self.def_v
         self.owner = random.randint(0, 1)
+        if self.owner:
+            self.color = color.green
+        else:
+            self.color = color.yellow
         self.event_type = 0
         
         temp = random.randint(0, 3)
@@ -114,21 +120,21 @@ class Ball:
         _delta_y = _y - (brick.posy + brick.height/2)
         
         if (self.check_collision(brick)):
-            angle = math.atan2(_delta_y,_delta_x)
+            angle = math.atan2(_delta_x, _delta_y)
+            if (-math.pi) < angle <= math.pi / 2:
+                angle = angle + 3 * math.pi / 2
+            else:
+                angle = angle - math.pi / 2
             angle = 2*math.pi - angle
-            while ((angle < 0) or (angle >= 2*math.pi)):
-                if angle < 0:
-                   angle = angle + 2*math.pi
-                else:
-                   angle = angle - 2*math.pi
 
             # !?! - bad bug fix - weird collision between
             # ball and brick, ball stuck in brick
-            if ((brick.posx <= self.x <= brick.posx + brick.width) and
-                (brick.posy <= self.y <= brick.posy + brick.height)):
-                self.x = game.windowwidth/2
-                self.y = game.windowheight/2
-
+            if ((brick.posx <= self.x + self.d
+                 <= brick.posx + brick.width + self.d) and
+                (brick.posy <= self.y + self.d
+                 <= brick.posy + brick.height + self.d)):
+                self.x = self._last_pos[0]
+                self.y = self._last_pos[1]
                 
             if ((0 <= angle <= math.pi/4) or
                 (3*math.pi/4 <= angle <= 5*math.pi/4) or
@@ -182,8 +188,8 @@ class Ball:
         """
         #http://stackoverflow.com/questions/401847/
         #circle-rectangle-collision-detection-intersection
-        _x = _x + self.d/2
-        _y = _y + self.d/2
+        _x = _x + self.r
+        _y = _y + self.r
 
         _brick_x = brick.posx + brick.width/2
         _brick_y = brick.posy + brick.height/2
@@ -191,9 +197,9 @@ class Ball:
         cd_x = abs(_x - _brick_x)
         cd_y = abs(_y - _brick_y)
 
-        if cd_x > brick.width/2 + self.d/2:
+        if cd_x > brick.width/2 + self.r:
             return False
-        if cd_y > brick.height/2 + self.d/2:
+        if cd_y > brick.height/2 + self.r:
             return False
 
         if cd_x <= brick.width/2:
@@ -204,7 +210,7 @@ class Ball:
         cd_sq = ((cd_x - brick.width/2)*(cd_x - brick.width/2) -
                  (cd_y - brick.height/2)*(cd_y - brick.height/2))
 
-        return (cd_sq <= (self.d*self.d/4))
+        return (cd_sq <= self.r*self.r)
         
                     
 
@@ -228,6 +234,7 @@ class Ball:
             self.angle = (self.angle + math.pi / 1000 *
                           (self.y - paddle_1.posy - paddle_1.height/2))
             self.owner = 0
+            self.color = color.yellow
                     
         if ((_x + self.d >= game.windowwidth - paddle_2.width) and
             (paddle_2.posy - self.d <= _y <= paddle_2.posy +
@@ -236,14 +243,11 @@ class Ball:
             self.angle = (self.angle + math.pi / 1000 *
                           (self.y - paddle_2.posy - paddle_2.height/2))
             self.owner = 1
+            self.color = color.green
         
     def draw(self):
         """
         It draws ball.
         """
-        if self.owner:
-            self.color = color.green
-        else:
-            self.color = color.yellow
         pygame.draw.ellipse(game.screen, self.color,
                             (self.x, self.y, self.d, self.d))

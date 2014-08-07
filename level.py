@@ -38,7 +38,7 @@ class Level:
         storage.reset_bricks()
         storage.reset_balls()
         storage.reset_paddles()
-        storage.add_ball(Ball(400, 300, 20, 5, 5, 1, 0.005, color.white))
+        storage.add_ball(Ball(400, 300, 20, 7, 7, 1, 0.005, color.white))
         storage.add_paddle(Paddle(0, 225, 20, 120, 5))
         storage.add_paddle(Paddle(780, 225, 20, 120, 5))
         self.pause = False
